@@ -1,0 +1,42 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+dist/
+build/
+.pytest_cache/
+
+# Bundled frontend (built by CI — not committed)
+skills_vis/static/
+
+# Runtime database
+skills_vis/skills.db
+skills.db
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor / OS
+.DS_Store
+*.log
+*.bak
+*.swp
+
+# Git
+.worktrees/.superpowers/
+.worktrees/
+
+# Local development docs (superpowers plans/specs)
+docs/

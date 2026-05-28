@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "skills-vis"
+version = "0.1.0"
+description = "Monitor, manage, and visualize AI agent skills, execution flow, and skill folders in one unified observability platform."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+keywords = ["skills", "ai", "agent", "monitor", "visualization"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "fastapi>=0.115,<1.0",
+    "uvicorn[standard]>=0.30,<1.0",
+    "pydantic>=2.8,<3.0",
+    "mcp>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0,<9.0",
+    "httpx>=0.27,<1.0",
+]
+
+[project.scripts]
+skills-vis = "skills_vis.main:run"
+
+[tool.hatch.build.targets.wheel]
+packages = ["skills_vis"]
+artifacts = ["skills_vis/static"]
+exclude = ["skills_vis/tests"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"skills-monitor/SKILL.md" = "skills-monitor/SKILL.md"
+
+[tool.pytest.ini_options]
+testpaths = ["skills_vis/tests"]
