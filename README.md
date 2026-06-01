@@ -1,7 +1,12 @@
 # Skills Vis
 
 <p align="center">
-  <img src="static/skills_vis_new.png" alt="Skills Vis logo" width="320" />
+  <img src="https://raw.githubusercontent.com/JJIASI/skills_vis/main/static/skills_vis_new.png" alt="Skills Vis logo" width="320" />
+</p>
+
+<p align="center">
+  <a href="https://pypi.org/project/skills-vis/"><img src="https://img.shields.io/pypi/v/skills-vis" alt="PyPI version" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License" /></a>
 </p>
 
 An interactive browser for your AI agent skill libraries — visualize your skills as a graph, edit them in place, and track which ones your agent uses in real time.
