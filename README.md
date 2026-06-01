@@ -21,7 +21,7 @@ An interactive browser for your AI agent skill libraries — visualize your skil
 pip install skills-vis
 ```
 
-Requires Python 3.12+.
+Requires Python 3.10+.
 
 ## Quick start
 
