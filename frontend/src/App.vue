@@ -483,7 +483,7 @@ async function handleExpandAll(rootPath) {
 async function handleToggle(path) {
   const node = findInTree(path);
   if (node && node.type === "folder" && node.children_loaded === false) {
-    const isExpanded = expandedWithRoot.value[path];
+    const isExpanded = expanded.value[path]; // use user-explicit state, not search-augmented
     const isLoading = loadingPaths.value.has(path);
     if (isLoading) return;
     if (!isExpanded) {
