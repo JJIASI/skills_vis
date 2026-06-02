@@ -34,7 +34,8 @@
         :starters="starters"
         :loading="drawerLoading"
         :error="computedDrawerError"
-        :active-root-path="rootInput"
+        :active-root-path="tree?.path"
+        :server-root-path="serverWorkspacePath"
         @select="handleDrawerSelect"
         @add="handleDrawerAdd"
         @update="handleDrawerUpdate"
@@ -174,7 +175,7 @@ import { usePanelResize, MIN_WIDTH, HANDLE_WIDTH } from "./composables/usePanelR
 import { collectSearchExpandPaths, collectSearchMatches, nextIndex, prevIndex } from "./components/graph/search.js";
 import * as clientApi from "./api/client.js";
 import { ACTIVE_NODE_FADE_MS } from "./components/graph/canvasRenderer.js";
-import { collapseHome } from "./utils/path.js";
+import { collapseHome, setHome } from "./utils/path.js";
 
 const props = defineProps({
   initialTree: Object,
@@ -253,6 +254,7 @@ onMounted(async () => {
   if (api) {
     try {
       const data = await api.getServerCwd();
+      if (data?.home) setHome(data.home);
       if (data?.path) {
         serverWorkspacePath.value = data.path;
         await loadTree(data.path);
@@ -330,10 +332,11 @@ async function handleDrawerAdd(payload) {
   }
 }
 
-async function handleDrawerUpdate(id, payload) { 
+async function handleDrawerUpdate(id, payload) {
   try {
-    await updateSkill(id, payload);
-    drawerError.value = null; // Clear error on success, which signals form to close
+    const updated = await updateSkill(id, payload);
+    drawerError.value = null;
+    await handleDrawerSelect(updated);
   } catch (err) {
     drawerError.value = readableError(err, "Failed to update skill");
   }

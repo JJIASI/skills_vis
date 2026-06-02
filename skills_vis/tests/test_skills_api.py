@@ -114,7 +114,7 @@ def test_get_skills_list_returns_starters_and_saved(client: TestClient, tmp_path
 
     # each starter must include required keys and have exact public shape
     for st in data["starters"]:
-        assert set(st.keys()) == {"key", "name", "path", "already_added"}
+        assert set(st.keys()) == {"key", "name", "path", "already_added", "is_available"}
 
     # keys must be present, usable as stable internal identifiers, and unique
     new_keys = [s.get("key") for s in data["starters"]]
@@ -183,7 +183,7 @@ def test_get_skills_list_already_added_when_saved_matches_starter(client: TestCl
     data2 = resp2.json()
     # Ensure starters have the exact expected public shape
     for st in data2.get("starters", []):
-        assert set(st.keys()) == {"key", "name", "path", "already_added"}
+        assert set(st.keys()) == {"key", "name", "path", "already_added", "is_available"}
     # find starter with same name
     found = [s for s in data2.get("starters", []) if s.get("name") == known_starter_name]
     assert found, "expected to find the seeded starter by name"

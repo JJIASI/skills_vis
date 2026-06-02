@@ -442,7 +442,7 @@ describe("App", () => {
 
 describe("Skills Drawer integration", () => {
   const SAVED = [{ id: 1, label: "My Skills", path: "/tmp/skills", is_available: true }];
-  const STARTERS = [{ key: "copilot", name: "Copilot", path: "/home/.copilot/skills", already_added: false }];
+  const STARTERS = [{ key: "copilot", name: "Copilot", path: "/home/.copilot/skills", already_added: false, is_available: true }];
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -535,8 +535,9 @@ describe("Skills Drawer integration", () => {
     mockCreateSkill.mockResolvedValue({ id: 99, label: "Copilot", path: "/home/.copilot/skills", is_available: false });
     const w = mount(App);
     await flushPromises();
-    // Open the drawer first
+    // Open the drawer and expand the starter section first
     await w.find("[data-test='open-drawer']").trigger("click");
+    await w.find("[data-test='starter-toggle']").trigger("click");
     await w.find("[data-test='add-starter-copilot']").trigger("click");
     await flushPromises();
     expect(mockCreateSkill).toHaveBeenCalledWith({ label: "Copilot", path: "/home/.copilot/skills" });
@@ -847,7 +848,7 @@ describe("auto-load on mount", () => {
     expect(w.find("[data-test='toolbar']").exists()).toBe(true);
   });
 
-  it("passes server workspace path (not tree path) to SkillsDrawer as activeRootPath", async () => {
+  it("passes current tree path to SkillsDrawer as activeRootPath", async () => {
     const mockGetServerCwdApi = vi.fn().mockResolvedValue({ path: "/server/cwd" });
     const mockGetTree = vi.fn().mockResolvedValue({ name: "cwd", path: "/server/cwd", type: "folder", children: [] });
     const w = mount(App, {

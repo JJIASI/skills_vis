@@ -9,6 +9,8 @@ RUN npm run build
 # Stage 2: build the Python wheel
 FROM python:3.12-slim AS builder
 WORKDIR /build
+ARG VERSION=0.0.0.dev0
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION}
 COPY pyproject.toml README.md LICENSE ./
 COPY skills_vis/ skills_vis/
 COPY --from=frontend /build/dist skills_vis/static

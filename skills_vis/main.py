@@ -195,7 +195,7 @@ def get_active_root():
 @app.get("/api/server_cwd")
 def get_server_cwd():
     """Return the directory where the server was started. Never changes."""
-    return {"path": _SERVER_CWD}
+    return {"path": _SERVER_CWD, "home": str(Path.home())}
 
 
 @app.post("/api/skills", status_code=201)

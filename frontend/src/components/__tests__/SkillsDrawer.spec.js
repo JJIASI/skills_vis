@@ -7,8 +7,8 @@ const SAVED = [
   { id: 2, label: "Offline", path: "/nonexistent", is_available: false },
 ];
 const STARTERS = [
-  { key: "copilot", name: "Copilot", path: "/home/.copilot/skills", already_added: false },
-  { key: "claude-code", name: "Claude Code", path: "/home/.claude/skills", already_added: true },
+  { key: "copilot", name: "Copilot", path: "/home/.copilot/skills", already_added: false, is_available: true },
+  { key: "claude-code", name: "Claude Code", path: "/home/.claude/skills", already_added: true, is_available: true },
 ];
 
 function makeWrapper(props = {}) {
@@ -25,12 +25,14 @@ function makeWrapper(props = {}) {
 }
 
 describe("SkillsDrawer", () => {
-  it("renders section headings and entry labels", () => {
+  it("renders section headings and entry labels", async () => {
     const w = makeWrapper();
     expect(w.text()).toContain("Your skills");      // spec-required heading
     expect(w.text()).toContain("Popular starters"); // spec-required heading
     expect(w.text()).toContain("My Skills");
     expect(w.text()).toContain("Offline");
+    // Starters are collapsed by default — open the section first
+    await w.find("[data-test='starter-toggle']").trigger("click");
     expect(w.text()).toContain("Copilot");
     expect(w.text()).toContain("Claude Code");
   });
@@ -59,16 +61,26 @@ describe("SkillsDrawer", () => {
     expect(btn.exists()).toBe(false); // unavailable entries have no select button
   });
 
-  it("already-added starters show disabled state", () => {
+  it("already-added starters show disabled state", async () => {
     const w = makeWrapper();
+    await w.find("[data-test='starter-toggle']").trigger("click");
     const addBtn = w.find("[data-test='add-starter-claude-code']");
     expect(addBtn.attributes("disabled")).toBeDefined();
   });
 
   it("emits add-starter with starter payload when add button clicked", async () => {
     const w = makeWrapper();
+    await w.find("[data-test='starter-toggle']").trigger("click");
     await w.find("[data-test='add-starter-copilot']").trigger("click");
     expect(w.emitted("add-starter")).toEqual([[STARTERS[0]]]);
+  });
+
+  it("unavailable starters are not rendered", () => {
+    const unavailableStarters = [
+      { key: "missing", name: "Missing", path: "/no/such/path", already_added: false, is_available: false },
+    ];
+    const w = makeWrapper({ starters: unavailableStarters });
+    expect(w.find("[data-test='add-starter-missing']").exists()).toBe(false);
   });
 
   it("shows error message and a retry button when error prop is set", async () => {
@@ -131,5 +143,33 @@ describe("current workspace", () => {
     const w = makeWrapper({ activeRootPath: "/home/user/my-workspace" });
     await w.find('[data-test="current-workspace-btn"]').trigger("click");
     expect(w.emitted("select")).toEqual([[{ path: "/home/user/my-workspace" }]]);
+  });
+});
+
+describe("server root path", () => {
+  it("shows server-root-btn when serverRootPath is set and not in saved", () => {
+    const w = makeWrapper({ serverRootPath: "/home/user/launch-dir" });
+    expect(w.find('[data-test="server-root-btn"]').exists()).toBe(true);
+    expect(w.text()).toContain("/home/user/launch-dir");
+  });
+
+  it("hides server-root-btn when serverRootPath is already in saved list", () => {
+    const w = makeWrapper({
+      serverRootPath: "/tmp/skills",
+      saved: [{ id: 1, label: "My Skills", path: "/tmp/skills", is_available: true }],
+    });
+    expect(w.find('[data-test="server-root-btn"]').exists()).toBe(false);
+  });
+
+  it("server-root-btn has no dismiss button", () => {
+    const w = makeWrapper({ serverRootPath: "/home/user/launch-dir" });
+    const btn = w.find('[data-test="server-root-btn"]');
+    expect(btn.find('button').exists()).toBe(false);
+  });
+
+  it("emits select with the server root path when clicked", async () => {
+    const w = makeWrapper({ serverRootPath: "/home/user/launch-dir" });
+    await w.find('[data-test="server-root-btn"]').trigger("click");
+    expect(w.emitted("select")).toEqual([[{ path: "/home/user/launch-dir" }]]);
   });
 });

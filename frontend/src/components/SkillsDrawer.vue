@@ -35,6 +35,28 @@
       </div>
       <span style="display:none">Your skills</span>
 
+      <!-- Server launch directory — always shown, non-dismissible -->
+      <div
+        v-if="serverRootPath && !saved.find(s => s.path === serverRootPath)"
+        class="skill-row unsaved-row"
+        :class="{ 'is-active': activeRootPath === serverRootPath }"
+        data-test="server-root-btn"
+        @click="$emit('select', { path: serverRootPath })"
+      >
+        <span class="icn">
+          <svg v-if="activeRootPath === serverRootPath" width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1H3V7z"/>
+            <path d="M3 8h18l-2 9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/>
+          </svg>
+          <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>
+          </svg>
+        </span>
+        <span class="label mono unsaved-path">{{ collapseHome(serverRootPath) }}</span>
+      </div>
+
       <!-- Unsaved (ad-hoc) paths — accumulated locally, not in DB -->
       <div
         v-for="path in extraPaths"
@@ -127,6 +149,7 @@
           v-else
           class="skill-row"
           style="opacity: 0.5; cursor: not-allowed;"
+          :title="`Path not found: ${collapseHome(entry.path)}`"
         >
           <span class="icn">⚠</span>
           <span class="label">{{ entry.label || collapseHome(entry.path) }}</span>
@@ -170,7 +193,7 @@
       </button>
 
       <!-- Starter Library (collapsible, at bottom) -->
-      <button class="drawer-section-label starter-toggle" style="margin-top: 8px;" @click="starterOpen = !starterOpen">
+      <button class="drawer-section-label starter-toggle" data-test="starter-toggle" style="margin-top: 8px;" @click="starterOpen = !starterOpen">
         <span>Starter Library</span>
         <svg class="starter-chevron" :class="{ open: starterOpen }" width="12" height="12" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -181,9 +204,9 @@
 
       <Transition name="starter-expand">
         <div v-if="starterOpen" class="starter-list">
+          <template v-for="starter in starters" :key="starter.key">
           <button
-            v-for="starter in starters"
-            :key="starter.key"
+            v-if="starter.is_available !== false"
             class="starter-card"
             :data-test="`add-starter-${starter.key}`"
             :disabled="starter.already_added || undefined"
@@ -209,6 +232,7 @@
               </div>
             </div>
           </button>
+          </template>
         </div>
       </Transition>
 
@@ -236,6 +260,7 @@ const props = defineProps({
   loading: { type: Boolean, default: false },
   error: { type: [String, null], default: null },
   activeRootPath: { type: String, default: null },
+  serverRootPath: { type: String, default: null },
 });
 
 const emit = defineEmits(["select", "add", "update", "remove", "add-starter", "retry", "close"]);
@@ -247,6 +272,7 @@ watch(
   () => props.activeRootPath,
   (path) => {
     if (!path) return;
+    if (path === props.serverRootPath) return; // has its own permanent row
     if (props.saved.find(s => s.path === path)) return;
     if (extraPaths.value.includes(path)) return;
     extraPaths.value.push(path);
@@ -267,7 +293,7 @@ function removeExtraPath(path) {
   extraPaths.value = extraPaths.value.filter(p => p !== path);
 }
 
-const starterOpen = ref(true);
+const starterOpen = ref(false);
 
 const editingEntry = ref(null);
 const editLabel = ref("");
@@ -294,12 +320,23 @@ function cancelEdit() {
 
 function handleAddSubmit() {
   if (!addPath.value.trim()) return;
-  emit("add", { label: addLabel.value.trim() || null, path: addPath.value.trim() });
+  const label = addLabel.value.trim() || null;
+  const path = addPath.value.trim();
+  showAddForm.value = false;
+  addLabel.value = "";
+  addPath.value = "";
+  emit("add", { label, path });
 }
 
 function handleEditSubmit() {
   if (!editPath.value.trim() || !editingEntry.value) return;
-  emit("update", editingEntry.value.id, { label: editLabel.value.trim() || null, path: editPath.value.trim() });
+  const id = editingEntry.value.id;
+  const label = editLabel.value.trim() || null;
+  const path = editPath.value.trim();
+  editingEntry.value = null;
+  editLabel.value = "";
+  editPath.value = "";
+  emit("update", id, { label, path });
 }
 
 function onPickerChange(event) {

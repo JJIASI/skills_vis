@@ -110,6 +110,7 @@ def read_skills(db_path: str | Path) -> dict:
             "name": starter["name"],
             "path": normalize_skill_path(starter["path_template"]),
             "already_added": normalize_skill_path(starter["path_template"]) in saved_paths,
+            "is_available": is_skill_path_available(normalize_skill_path(starter["path_template"])),
         }
         for starter in STARTER_SKILLS
     ]

@@ -908,6 +908,14 @@ watch(
 );
 
 watch(
+  () => props.tree?.path,
+  (newPath) => {
+    if (!newPath) return;
+    nextTick(() => fitToGraph());
+  },
+);
+
+watch(
   () => reorderByMtime.value,
   () => {
     scheduleRender();
