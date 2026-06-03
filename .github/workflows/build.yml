@@ -93,7 +93,7 @@ jobs:
     needs: [build, test-backend, test-frontend]
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
-    environment: testpypi
+    environment: pypi
     permissions:
       id-token: write
 
@@ -104,7 +104,5 @@ jobs:
           name: dist
           path: dist/
 
-      - name: Publish to TestPyPI
+      - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
