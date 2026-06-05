@@ -30,7 +30,7 @@
             data-test="editor-header-name-error"
           >{{ renameError }}</div>
         </div>
-        <div class="header-path" data-test="editor-header-path">{{ selectedNode.path }}</div>
+        <div class="header-path" data-test="editor-header-path">{{ collapseHome(selectedNode.path) }}</div>
         <div v-if="skillHeader" class="skill-header" data-test="skill-header">
           <div class="skill-header-name" data-test="skill-header-name">{{ skillHeader.name }}</div>
           <div class="skill-header-description" data-test="skill-header-description">{{ skillHeader.description }}</div>
@@ -229,6 +229,7 @@ import { MdEditor, MdPreview, MdCatalog, config } from "md-editor-v3"
 import "md-editor-v3/lib/style.css"
 import { classifyFile } from "../utils/fileKind"
 import { parseFrontMatter } from "../utils/parseFrontMatter"
+import { collapseHome } from "../utils/path.js"
 
 // Strip YAML front matter from the MdEditor preview (right-side only)
 config({
@@ -407,6 +408,7 @@ export default {
       editorId,
       toggleEditMode,
       modKey,
+      collapseHome,
     }
   },
 }
