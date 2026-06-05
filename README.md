@@ -11,6 +11,24 @@
 
 An interactive browser for your AI agent skill libraries — visualize your skills as a graph, edit them in place, and track which ones your agent uses in real time.
 
+## Screenshots
+
+**Graph view** — navigate your skills folder as a tree, expand folders, and search nodes with ⌘K.
+
+![Graph view](static/screenshots/01_graph.png)
+
+**File viewer** — click any node to open and preview its `SKILL.md` with rendered markdown and a live table of contents.
+
+![File viewer](static/screenshots/03_editor.png)
+
+**Skills drawer** — manage workspaces and add skills from the starter library.
+
+![Skills drawer](static/screenshots/02_drawer.png)
+
+**Recording sessions** — replay past agent sessions to see which skills were invoked.
+
+![Recording sessions](static/screenshots/04_monitor.png)
+
 ## What it does
 
 - **Browse skills as a graph** — navigate your skills folder as a left-to-right tree; expand, collapse, and select nodes with a click.
