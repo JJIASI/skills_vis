@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- **Search results**: search now matches only the node name, not the full path — previously, searching for a folder name would show every descendant as a match
+- **Collapse during search**: folders highlighted by search can now be collapsed by the user; the search auto-expand no longer overrides an explicit collapse
+- **Save current root**: the "Save current root" quick action now pre-fills the path input with the currently loaded root, making it distinct from "New skill folder"
+
+### Added
+
+- `python -m skills_vis` can now be used to launch the server (in addition to the `skills-vis` CLI entry point)
+
 ## [0.1.2] - 2026-06-03
 
 ### Fixed
