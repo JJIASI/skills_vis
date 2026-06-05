@@ -19,8 +19,7 @@ export function collectSearchMatches(tree, query) {
     seen.add(node.path);
 
     const name = node.name.toLowerCase();
-    const path = node.path.toLowerCase();
-    if (name.includes(normalizedQuery) || path.includes(normalizedQuery)) {
+    if (name.includes(normalizedQuery)) {
       matches.push(node.path);
     }
 

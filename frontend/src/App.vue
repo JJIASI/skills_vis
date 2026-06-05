@@ -356,7 +356,9 @@ const expandedWithRoot = computed(() => {
     result[tree.value.path] = true;
   }
   for (const path of graphSearchExpandPaths.value) {
-    result[path] = true;
+    if (expanded.value[path] !== false) {
+      result[path] = true;
+    }
   }
   return result;
 });

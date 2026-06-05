@@ -20,9 +20,9 @@ const tree = {
 };
 
 describe("search helpers", () => {
-  it("matches by name and path with case-insensitive substring", () => {
+  it("matches by name with case-insensitive substring", () => {
     expect(collectSearchMatches(tree, "read")).toEqual(["/tmp/skills/README.md"]);
-    expect(collectSearchMatches(tree, "SKILLS/DOCS/GUIDE")).toEqual([
+    expect(collectSearchMatches(tree, "GUIDE")).toEqual([
       "/tmp/skills/docs/guide.md",
       "/tmp/skills/docs/guide-copy.md",
     ]);
@@ -34,7 +34,7 @@ describe("search helpers", () => {
   });
 
   it("includes root node in matching", () => {
-    expect(collectSearchMatches(tree, "tmp/skills")).toContain("/tmp/skills");
+    expect(collectSearchMatches(tree, "skills")).toContain("/tmp/skills");
   });
 
   it("keeps duplicate names distinct by path identity", () => {

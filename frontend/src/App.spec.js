@@ -699,30 +699,32 @@ describe("graph search state ownership", () => {
     const wrapper = mount(App, { props: { initialTree: searchTree } });
     const graphPanel = wrapper.findComponent({ name: "GraphPanel" });
 
-    graphPanel.vm.$emit("update:searchQuery", "tmp/skills");
+    // ".md" matches README.md (index 0) and Guide.md (index 1)
+    graphPanel.vm.$emit("update:searchQuery", ".md");
     await nextTick();
-    graphPanel.vm.$emit("next-search-match");
+    graphPanel.vm.$emit("next-search-match"); // advance to Guide.md
     await nextTick();
-    graphPanel.vm.$emit("update:searchQuery", "skills");
+    graphPanel.vm.$emit("update:searchQuery", "guide"); // Guide.md still present — preserve it
     await nextTick();
 
     const remounted = wrapper.findComponent({ name: "GraphPanel" });
-    expect(remounted.props("activeSearchPath")).toBe("/tmp/skills/README.md");
+    expect(remounted.props("activeSearchPath")).toBe("/tmp/skills/docs/Guide.md");
   });
 
   it("wraps Enter/Shift+Enter navigation and keeps no-op on zero matches", async () => {
     const wrapper = mount(App, { props: { initialTree: searchTree } });
     const graphPanel = wrapper.findComponent({ name: "GraphPanel" });
 
-    graphPanel.vm.$emit("update:searchQuery", "skills");
+    // ".md" matches [README.md, Guide.md]; active starts at index 0 = README.md
+    graphPanel.vm.$emit("update:searchQuery", ".md");
     await nextTick();
-    graphPanel.vm.$emit("next-search-match");
+    graphPanel.vm.$emit("next-search-match"); // → index 1 = Guide.md
+    await nextTick();
+    expect(wrapper.findComponent({ name: "GraphPanel" }).props("activeSearchPath")).toBe("/tmp/skills/docs/Guide.md");
+
+    graphPanel.vm.$emit("prev-search-match"); // → index 0 = README.md
     await nextTick();
     expect(wrapper.findComponent({ name: "GraphPanel" }).props("activeSearchPath")).toBe("/tmp/skills/README.md");
-
-    graphPanel.vm.$emit("prev-search-match");
-    await nextTick();
-    expect(wrapper.findComponent({ name: "GraphPanel" }).props("activeSearchPath")).toBe("/tmp/skills");
 
     graphPanel.vm.$emit("update:searchQuery", "nomatch");
     await nextTick();
