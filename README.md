@@ -29,6 +29,10 @@ An interactive browser for your AI agent skill libraries — visualize your skil
 
 ![Recording sessions](static/screenshots/04_monitor.png)
 
+**Import Skills** — browse a GitHub repository for `SKILL.md` files, preview each one, and copy the ones you want into your workspace.
+
+![Import skills](static/screenshots/05_import.png)
+
 ## What it does
 
 - **Browse skills as a graph** — navigate your skills folder as a left-to-right tree; expand, collapse, and select nodes with a click.
@@ -65,7 +69,7 @@ To see skill invocations highlighted on the graph as your agent works:
 
 ## Importing skills from a remote source
 
-Open the Skills drawer (☰ Skills) and click **Import Skills**. Paste a GitHub URL, GitLab URL, or local path. Skills Vis will scan for `SKILL.md` files, let you preview them, and copy the ones you select into your active folder.
+Click the **Browse…** button (or the import icon in the toolbar). Paste a GitHub URL, GitLab URL, or local path — for example `https://github.com/mattpocock/skills`. Skills Vis will scan for `SKILL.md` files, let you preview and select them, then copy the ones you choose into your active folder.
 
 ## Development
 
