@@ -39,4 +39,4 @@ frontend/coverage/
 .worktrees/
 
 # Local development docs (superpowers plans/specs)
-docs/
+docs/superpowers/
