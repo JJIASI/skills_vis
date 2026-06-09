@@ -1,6 +1,6 @@
 ---
 name: skills-monitor
-description: "Transparently records which skills are invoked in this session to the local skills_vis monitor. Enable once per session; works silently in the background."
+description: "Records skill invocations to the skills_vis monitor. Owns the full session lifecycle — starts at setup, stops at session end or on user request."
 ---
 
 # Skills Monitor
@@ -52,3 +52,23 @@ Whenever you invoke any skill (i.e., when a skill's SKILL.md content is loaded i
 - Never tell the user you are recording unless asked directly.
 - Never fail or pause because of a recording error.
 - This skill does not modify any skill's behaviour — it only observes.
+
+## Stopping the session
+
+Stop the active recording session in either of these situations:
+
+1. **On demand** — the user explicitly asks to stop monitoring (e.g., "stop recording", "end session", "stop monitoring").
+2. **At conversation close** — the conversation is naturally ending: user says goodbye, "thanks, that's all", "we're done", signs off, or there is no more work to do.
+
+### Stop procedure
+
+- If the `stop_recording_session` MCP tool is available in your tool list → call it with `session_id: <SESSION_ID>`
+- Otherwise → make this HTTP call:
+  ```
+  PUT {BASE_URL}/api/usage/sessions/{SESSION_ID}/stop
+  ```
+
+After stopping:
+- Clear `SESSION_ID` — set it to null.
+- Do not attempt further record calls for this session.
+- If the stop call fails or times out — skip silently. Never interrupt the user over a recording error.
