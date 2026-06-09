@@ -62,6 +62,8 @@ Stop the active recording session in either of these situations:
 
 ### Stop procedure
 
+If `SESSION_ID` is null (session creation failed during setup), skip the stop call entirely.
+
 - If the `stop_recording_session` MCP tool is available in your tool list → call it with `session_id: <SESSION_ID>`
 - Otherwise → make this HTTP call:
   ```
