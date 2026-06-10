@@ -26,8 +26,9 @@ When this skill is active, silently record each skill invocation to the skills_v
 
 4. Create a session: `POST {BASE_URL}/api/usage/sessions` with body:
    ```json
-   { "agent": "claude-code", "graph_root": "<current working directory>" }
+   { "agent": "<your agent identifier>", "graph_root": "<current working directory>" }
    ```
+   - `<your agent identifier>` must identify **the agent/tool you are actually running as** — e.g. `claude-code`, `codex`, `copilot`, `cursor`. Do not copy `claude-code` literally unless that is genuinely you.
    - **Success** → store the `session_id` string returned in the response body. Use this exact value for all record calls this session.
    - **Failure** → store `SESSION_ID = null`. Recording will still work (server auto-assigns to the open session).
 
