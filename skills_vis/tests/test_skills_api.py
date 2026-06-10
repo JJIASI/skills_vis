@@ -110,7 +110,7 @@ def test_get_skills_list_returns_starters_and_saved(client: TestClient, tmp_path
     assert all(isinstance(s, dict) for s in data["starters"])
     names = [s.get("name") for s in data["starters"]]
     # Ensure the starters are presented in the spec-defined fixed order
-    assert names == ["Claude Code", "Copilot", "Codex", "Hermes", "OpenClaw"], "expected starters to match the spec-defined order"
+    assert names == ["Claude Code", "Copilot", "Codex", "Hermes", "OpenClaw", "Cursor", "Agent"], "expected starters to match the spec-defined order"
 
     # each starter must include required keys and have exact public shape
     for st in data["starters"]:
@@ -134,6 +134,8 @@ def test_get_skills_list_returns_starters_and_saved(client: TestClient, tmp_path
         "Codex": str(Path("~/.codex/skills").expanduser().resolve(strict=False)),
         "Hermes": str(Path("~/.hermes/skills").expanduser().resolve(strict=False)),
         "OpenClaw": str(Path("~/.openclaw/skills").expanduser().resolve(strict=False)),
+        "Cursor": str(Path("~/.cursor/skills").expanduser().resolve(strict=False)),
+        "Agent": str(Path("~/.agent/skills").expanduser().resolve(strict=False)),
     }
     for st in data["starters"]:
         p = st.get("path")

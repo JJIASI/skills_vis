@@ -9,6 +9,8 @@ STARTER_SKILLS = [
     {"key": "codex", "name": "Codex", "path_template": "~/.codex/skills"},
     {"key": "hermes", "name": "Hermes", "path_template": "~/.hermes/skills"},
     {"key": "openclaw", "name": "OpenClaw", "path_template": "~/.openclaw/skills"},
+    {"key": "cursor", "name": "Cursor", "path_template": "~/.cursor/skills"},
+    {"key": "agent", "name": "Agent", "path_template": "~/.agent/skills"},
 ]
 
 
