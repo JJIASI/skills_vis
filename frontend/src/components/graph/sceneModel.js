@@ -100,7 +100,7 @@ export function buildScene({
     }
 
     const children = reorderByMtime
-      ? [...node.children].sort((a, b) => (b.atime ?? b.mtime ?? 0) - (a.atime ?? a.mtime ?? 0))
+      ? [...node.children].sort((a, b) => (b.mtime ?? 0) - (a.mtime ?? 0))
       : node.children;
 
     const childYs = [];
@@ -155,8 +155,8 @@ export function buildScene({
     const childCount =
       node.type === "folder" && Array.isArray(node.children) ? node.children.length : 0;
 
-    // Meta line text — use atime (last access) when available, fall back to mtime
-    const relTime = formatRelativeTime(node.atime ?? node.mtime);
+    // Meta line text — use mtime (last modified)
+    const relTime = formatRelativeTime(node.mtime);
     let metaLabel;
     if (depth === 0) {
       metaLabel = "";
@@ -207,7 +207,7 @@ export function buildScene({
 
     if (expanded[node.path] && Array.isArray(node.children)) {
       const children = reorderByMtime
-        ? [...node.children].sort((a, b) => (b.atime ?? b.mtime ?? 0) - (a.atime ?? a.mtime ?? 0))
+        ? [...node.children].sort((a, b) => (b.mtime ?? 0) - (a.mtime ?? 0))
         : node.children;
       for (const child of children) buildNodes(child, depth + 1, node.path);
     }
