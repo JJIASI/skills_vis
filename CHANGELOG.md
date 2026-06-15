@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.5] - 2026-06-16
+
+### Added
+
+- **Skills drawer**: Cursor (`~/.cursor/skills`) and Agent (`~/.agent/skills`) starter skill paths now appear as one-click starter options
+- **Skills monitor skill**: the agent can now stop its own recording session (on user request or at the end of a conversation) via the `stop_recording_session` MCP tool or a direct HTTP fallback
+
+### Fixed
+
+- **Graph sorting**: "Recently modified" (renamed from "Recently used") now sorts and labels items by `mtime` only, instead of falling back to `atime`
+- **Context menu & canvas dark mode**: context menu and buttons now use theme CSS variables, and canvas colors were adjusted for better dark mode rendering
+- **Skills monitor skill**: clarified that the session's agent identifier should reflect the actual tool in use rather than a literal `claude-code` placeholder, and the stop call is now skipped when `SESSION_ID` is null
+
+### Docs
+
+- Added bilingual (English / Traditional Chinese) user guides under `docs/user-guide/` and linked them from the README
+
 ## [0.1.4] - 2026-06-06
 
 ### Fixed
