@@ -21,6 +21,17 @@ npm run dev
 
 Frontend dev server: `http://127.0.0.1:5173` (proxies `/api` to the backend).
 
+## Run as a desktop app (experimental)
+
+PyWebview wraps the server in a native window instead of a browser tab.
+
+```bash
+pip install -e ".[desktop]"
+skills-vis-desktop
+```
+
+Closing the window stops the background server.
+
 ## Run tests
 
 ```bash
