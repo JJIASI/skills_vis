@@ -260,8 +260,8 @@ export default {
 <style scoped>
 .context-menu {
   position: fixed;
-  background: white;
-  border: 1px solid #ddd;
+  background: var(--raised);
+  border: 1px solid var(--border-2);
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 1000;
@@ -275,12 +275,13 @@ button {
   padding: 8px 12px;
   border: none;
   background: none;
+  color: var(--text);
   cursor: pointer;
   text-align: left;
 }
 
 button:hover {
-  background-color: #f0f0f0;
+  background-color: var(--sub);
 }
 
 /* Inline create/rename form */
@@ -303,11 +304,13 @@ button:hover {
 .inline-form-input {
   width: 100%;
   padding: 5px 8px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-2);
   border-radius: 4px;
   font-size: 13px;
   outline: none;
   box-sizing: border-box;
+  background: var(--bg);
+  color: var(--text);
 }
 
 .inline-form-input:focus {

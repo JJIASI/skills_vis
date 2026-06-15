@@ -152,17 +152,17 @@ export function renderScene(
   const colors = dark
     ? {
         bg:               "#0c0b0a",
-        edge:             "#3d362e",
+        edge:             "#5e5650",
         rootFill:         "#f6f4ef",  // light in dark mode (inverted badge)
         rootText:         "#0c0b0a",
-        folderFill:       "#221f1c",
+        folderFill:       "#332e29",
         folderStroke:     "#3d362e",
-        folderIcon:       "#5e5a52",
+        folderIcon:       "#a39d93",
         diamondFill:      "#1c1610",
         diamondActiveFill:"#f59e0b",
         diamondStroke:    "#f59e0b",
         circleFill:       "#221f1c",
-        circleStroke:     "#5e5a52",
+        circleStroke:     "#a39d93",
         label:            "#f6f4ef",
         labelBold:        "#f6f4ef",
         meta:             "#8a857d",
