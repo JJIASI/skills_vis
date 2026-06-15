@@ -27,9 +27,13 @@ dev = [
     "pytest>=8.0,<9.0",
     "httpx>=0.27,<1.0",
 ]
+desktop = [
+    "pywebview>=5.0,<6.0",
+]
 
 [project.scripts]
 skills-vis = "skills_vis.main:run"
+skills-vis-desktop = "skills_vis.desktop:run"
 
 [tool.hatch.version]
 source = "vcs"
