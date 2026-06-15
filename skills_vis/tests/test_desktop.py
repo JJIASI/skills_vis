@@ -1,4 +1,7 @@
+import os
 import socket
+import sys
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -22,13 +25,7 @@ def test_wait_for_server_raises_on_timeout():
         _wait_for_server("127.0.0.1", free_port, timeout=0.2)
 
 
-import sys
-from unittest.mock import MagicMock, patch
-
-
-def test_run_starts_server_and_opens_window(tmp_path, monkeypatch):
-    monkeypatch.setenv("SKILLS_VIS_DB_PATH", str(tmp_path / "skills.db"))
-
+def test_run_starts_server_and_opens_window(tmp_path):
     mock_webview = MagicMock()
     mock_server = MagicMock()
     mock_server.should_exit = False
@@ -36,9 +33,12 @@ def test_run_starts_server_and_opens_window(tmp_path, monkeypatch):
     with patch.dict(sys.modules, {"webview": mock_webview}), \
          patch("skills_vis.desktop.uvicorn.Server", return_value=mock_server), \
          patch("skills_vis.desktop.threading.Thread") as mock_thread_cls, \
-         patch("skills_vis.desktop._wait_for_server"):
+         patch("skills_vis.desktop._wait_for_server"), \
+         patch("skills_vis.desktop._resolve_db_path", return_value=tmp_path / "skills.db"):
         from skills_vis import desktop
         desktop.run()
+
+    assert os.environ["SKILLS_VIS_DB_PATH"] == str(tmp_path / "skills.db")
 
     mock_thread_cls.assert_called_once()
     _, thread_kwargs = mock_thread_cls.call_args
