@@ -7,6 +7,8 @@ import os
 import platform
 import socket
 import sys
+import threading
+import webbrowser
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
@@ -406,6 +408,10 @@ def run() -> None:
         "--verbose", action="store_true",
         help="Show full uvicorn logs (default: warnings only)",
     )
+    parser.add_argument(
+        "--no-browser", action="store_true",
+        help="Do not open a browser window on startup",
+    )
     args = parser.parse_args()
 
     # Validate host is resolvable
@@ -439,6 +445,13 @@ def run() -> None:
     # Print banner
     url = f"http://{args.host}:{port}"
     print(_banner(url, db_path, port, port_source))
+
+    if not args.no_browser:
+        def _open_browser():
+            import time
+            time.sleep(0.8)
+            webbrowser.open(url)
+        threading.Thread(target=_open_browser, daemon=True).start()
 
     import uvicorn
     uvicorn.run(
