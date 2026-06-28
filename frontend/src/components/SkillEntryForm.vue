@@ -6,21 +6,21 @@
         data-test="skill-label-input"
         type="text"
         class="skill-entry-input skill-entry-input--label"
-        placeholder="Label (optional)"
+        :placeholder="t('skillEntryForm.labelPlaceholder')"
       />
       <input
         v-model="localPath"
         data-test="skill-path-input"
         type="text"
         class="skill-entry-input skill-entry-input--path"
-        placeholder="Absolute path…"
+        :placeholder="t('skillEntryForm.pathPlaceholder')"
         required
       />
       <button
         type="button"
         data-test="skill-form-browse"
         class="entry-icon-btn entry-icon-btn--browse"
-        title="Browse for folder"
+        :title="t('skillEntryForm.browseTitle')"
         @click="$emit('browse')"
       >
         <!-- Lucide folder icon -->
@@ -51,7 +51,7 @@
         type="button"
         data-test="skill-form-cancel"
         class="entry-icon-btn entry-icon-btn--cancel"
-        title="Cancel"
+        :title="t('skillEntryForm.cancelTitle')"
         @click="$emit('cancel')"
       >
         <!-- Lucide X -->
@@ -68,6 +68,9 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps({
   initialLabel: { type: String, default: "" },

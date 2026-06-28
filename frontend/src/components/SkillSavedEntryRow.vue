@@ -13,7 +13,7 @@
         v-if="entry.label || !entry.is_available"
         class="skill-path"
         :class="{ 'skill-path--unavailable': !entry.is_available }"
-      >{{ entry.path }}{{ !entry.is_available ? ' — not found' : '' }}</div>
+      >{{ entry.path }}{{ !entry.is_available ? t('skillSavedRow.notFound') : '' }}</div>
     </div>
 
     <!-- Actions -->
@@ -22,7 +22,7 @@
         v-if="entry.is_available"
         :data-test="`select-skill-${entry.id}`"
         class="icon-btn"
-        title="Open"
+        :title="t('skillSavedRow.open')"
         @click="$emit('select', entry)"
       >
         <!-- Lucide ExternalLink -->
@@ -37,7 +37,7 @@
       <button
         :data-test="`edit-skill-${entry.id}`"
         class="icon-btn"
-        title="Edit"
+        :title="t('skillSavedRow.edit')"
         @click="$emit('edit', entry)"
       >
         <!-- Lucide Edit2 -->
@@ -51,7 +51,7 @@
       <button
         :data-test="`remove-skill-${entry.id}`"
         class="icon-btn icon-btn--danger"
-        title="Remove"
+        :title="t('skillSavedRow.remove')"
         @click="$emit('remove', entry.id)"
       >
         <!-- Lucide Trash2 -->
@@ -71,6 +71,10 @@
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
+
 defineProps({ entry: { type: Object, required: true } });
 defineEmits(["select", "edit", "remove"]);
 </script>

@@ -46,7 +46,7 @@
           data-test="graph-search-input"
           class="canvas-search-input"
           type="text"
-          placeholder="Filter nodes…"
+          :placeholder="t('graph.filterPlaceholder')"
           @input="onSearchInput"
           @keydown.enter="onSearchKeydown"
           @keydown.esc="$emit('update:searchQuery', '')"
@@ -59,20 +59,20 @@
 
       <span
         :class="['graph-chip', reorderByMtime ? 'on' : '']"
-        title="Sort by modification time"
+        :title="t('graph.sortByMtime')"
         @click="toggleReorderByMtime"
       >
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
         </svg>
-        Recently modified
+        {{ t('graph.recentlyModified') }}
       </span>
     </div>
 
     <!-- Canvas toolbar -->
     <div class="canvas-toolbar" data-test="canvas-toolbar">
-      <button class="canvas-btn" title="Zoom in" aria-label="Zoom in" @click="zoomIn">
+      <button class="canvas-btn" :title="t('graph.zoomIn')" :aria-label="t('graph.zoomIn')" @click="zoomIn">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.4"/>
           <line x1="6" y1="3.5" x2="6" y2="8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
@@ -80,14 +80,14 @@
           <line x1="9.5" y1="9.5" x2="13" y2="13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
       </button>
-      <button class="canvas-btn" title="Zoom out" aria-label="Zoom out" @click="zoomOut">
+      <button class="canvas-btn" :title="t('graph.zoomOut')" :aria-label="t('graph.zoomOut')" @click="zoomOut">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.4"/>
           <line x1="3.5" y1="6" x2="8.5" y2="6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
           <line x1="9.5" y1="9.5" x2="13" y2="13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
       </button>
-      <button class="canvas-btn" title="Fit to graph" aria-label="Fit to graph" @click="fitToGraph">
+      <button class="canvas-btn" :title="t('graph.fitGraph')" :aria-label="t('graph.fitGraph')" @click="fitToGraph">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <path d="M1 5V1h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M9 1h4v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -98,8 +98,8 @@
       <button
         class="canvas-btn"
         :class="{ 'canvas-btn--active': rectZoomMode }"
-        title="Rect zoom"
-        aria-label="Rect zoom"
+        :title="t('graph.rectZoom')"
+        :aria-label="t('graph.rectZoom')"
         @click="toggleRectZoom"
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -111,8 +111,8 @@
       <button
         class="canvas-btn"
         :class="{ 'canvas-btn--active': reorderByMtime }"
-        title="Sort by modification time"
-        aria-label="Sort by modification time"
+        :title="t('graph.sortByMtime')"
+        :aria-label="t('graph.sortByMtime')"
         @click="toggleReorderByMtime"
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -125,26 +125,29 @@
       </button>
     </div>
 
-    <p v-if="panelState === 'empty'" data-test="graph-empty" class="fallback">No graph data</p>
-    <p v-if="panelState === 'error'" data-test="graph-error" class="fallback">Unable to render graph</p>
+    <p v-if="panelState === 'empty'" data-test="graph-empty" class="fallback">{{ t('graph.noData') }}</p>
+    <p v-if="panelState === 'error'" data-test="graph-error" class="fallback">{{ t('graph.renderError') }}</p>
 
     <!-- Graph legend -->
     <div class="graph-legend" aria-hidden="true">
-      <span class="lg"><span class="lg-swatch"/> Folder</span>
-      <span class="lg"><span class="lg-swatch skill"/> SKILL.md</span>
-      <span class="lg"><span class="lg-swatch file"/> File</span>
-      <span class="lg"><span class="lg-swatch recent"/> Recent</span>
+      <span class="lg"><span class="lg-swatch"/> {{ t('graph.legendFolder') }}</span>
+      <span class="lg"><span class="lg-swatch skill"/> {{ t('graph.legendSkill') }}</span>
+      <span class="lg"><span class="lg-swatch file"/> {{ t('graph.legendFile') }}</span>
+      <span class="lg"><span class="lg-swatch recent"/> {{ t('graph.legendRecent') }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { renderScene } from "./graph/canvasRenderer.js";
 import { hitTestScene } from "./graph/hitTest.js";
 import { buildScene } from "./graph/sceneModel.js";
 import { planTransition } from "./graph/transitionModel.js";
 import { MAX_SCALE, MIN_SCALE, clampScale, sceneToScreen, screenToScene, zoomAtPoint } from "./graph/transform.js";
+
+const { t } = useI18n();
 
 const props = defineProps({
   tree: { type: Object, default: null },

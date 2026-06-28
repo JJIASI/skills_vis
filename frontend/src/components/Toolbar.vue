@@ -21,7 +21,7 @@
       />
       <div v-if="skillCount" class="path-badge">
         <span>{{ skillCount }}</span>
-        <span>skills</span>
+        <span>{{ t('toolbar.skills') }}</span>
       </div>
     </div>
 
@@ -32,13 +32,18 @@
         <circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/>
         <path d="M11 6h4a3 3 0 0 1 3 3v0a3 3 0 0 1-3 3H9a3 3 0 0 0-3 3v0a3 3 0 0 0 3 3h4"/>
       </svg>
-      Browse…
+      {{ t('toolbar.browse') }}
     </button>
 
     <div class="toolbar-spacer" />
 
+    <!-- Language toggle -->
+    <button class="tb-btn" data-test="toggle-lang" @click="toggleLang">
+      {{ t('toolbar.switchLang') }}
+    </button>
+
     <!-- Dark mode toggle -->
-    <button class="tb-icon" :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'" data-test="toggle-dark" @click="$emit('toggle-dark')">
+    <button class="tb-icon" :title="isDark ? t('toolbar.lightMode') : t('toolbar.darkMode')" data-test="toggle-dark" @click="$emit('toggle-dark')">
       <!-- Moon (show in light mode → click to go dark) -->
       <svg v-if="!isDark" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -64,7 +69,7 @@
            stroke-linecap="round" stroke-linejoin="round" style="color: var(--muted);" aria-hidden="true">
         <path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h10"/>
       </svg>
-      Skills
+      {{ t('toolbar.skillsBtn') }}
     </button>
 
     <button class="tb-btn" @click="$emit('open-monitor')" data-test="open-monitor">
@@ -72,7 +77,7 @@
            stroke-linecap="round" stroke-linejoin="round" style="color: var(--muted);" aria-hidden="true">
         <path d="M3 12h4l3-8 4 16 3-8h4"/>
       </svg>
-      Sessions
+      {{ t('toolbar.sessions') }}
     </button>
 
     <!-- Record button -->
@@ -83,7 +88,7 @@
       @click="$emit('toggle-record')"
     >
       <span class="rec-dot" />
-      Recording
+      {{ t('toolbar.recording') }}
     </button>
     <button
       v-else
@@ -94,7 +99,7 @@
       <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
         <circle cx="12" cy="12" r="6"/>
       </svg>
-      Record
+      {{ t('toolbar.record') }}
     </button>
 
     <!-- Hidden file input for browse -->
@@ -111,6 +116,9 @@
 
 <script setup>
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t, locale } = useI18n();
 
 const props = defineProps({
   modelValue: { type: String, default: "" },
@@ -125,6 +133,12 @@ const emit = defineEmits([
 ]);
 
 const fileInput = ref(null);
+
+function toggleLang() {
+  const next = locale.value === 'en' ? 'zh-TW' : 'en';
+  locale.value = next;
+  localStorage.setItem('skills-vis-lang', next);
+}
 
 function openPicker() {
   fileInput.value?.click();

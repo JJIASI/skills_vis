@@ -3,15 +3,15 @@
 
     <!-- Header -->
     <div class="drawer-hd">
-      <h3>Skills Folders</h3>
+      <h3>{{ t('skillsDrawer.title') }}</h3>
       <div style="display: flex; gap: 4px;">
-        <button class="drawer-hd-icon" title="Add workspace" @click="showAddForm = !showAddForm">
+        <button class="drawer-hd-icon" :title="t('skillsDrawer.addWorkspace')" @click="showAddForm = !showAddForm">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 5v14"/><path d="M5 12h14"/>
           </svg>
         </button>
-        <button class="drawer-hd-icon" title="Close" data-test="drawer-close" @click="$emit('close')">
+        <button class="drawer-hd-icon" :title="t('skillsDrawer.close')" data-test="drawer-close" @click="$emit('close')">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M18 6 6 18"/><path d="M6 6l12 12"/>
@@ -21,16 +21,16 @@
     </div>
 
     <div class="drawer-body">
-      <div v-if="loading" class="drawer-loading" data-test="drawer-loading">Loading…</div>
+      <div v-if="loading" class="drawer-loading" data-test="drawer-loading">{{ t('skillsDrawer.loading') }}</div>
 
       <div v-if="error" class="drawer-error" data-test="drawer-error">
         <span>{{ error }}</span>
-        <button data-test="drawer-retry" @click="$emit('retry')">Retry</button>
+        <button data-test="drawer-retry" @click="$emit('retry')">{{ t('skillsDrawer.retry') }}</button>
       </div>
 
       <!-- Workspaces (also labelled "Your skills" for backward compat) -->
       <div class="drawer-section-label">
-        <span>Workspaces</span>
+        <span>{{ t('skillsDrawer.workspaces') }}</span>
         <span class="count">{{ saved.length }}</span>
       </div>
       <span style="display:none">Your skills</span>
@@ -78,7 +78,7 @@
           </svg>
         </span>
         <span class="label mono unsaved-path">{{ collapseHome(path) }}</span>
-        <button class="se-btn" title="Dismiss" @click.stop="removeExtraPath(path)">
+        <button class="se-btn" :title="t('skillsDrawer.dismiss')" @click.stop="removeExtraPath(path)">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M18 6 6 18"/><path d="M6 6l12 12"/>
@@ -91,17 +91,17 @@
           <div class="entry-form">
             <input
               v-model="editLabel"
-              placeholder="Label (optional)"
+              :placeholder="t('skillsDrawer.labelPlaceholder')"
               data-test="skill-label-input"
             />
             <input
               v-model="editPath"
-              placeholder="Absolute path…"
+              :placeholder="t('skillsDrawer.pathPlaceholder')"
               data-test="skill-path-input"
             />
             <div class="entry-form-row">
-              <button class="entry-form-submit" data-test="skill-form-submit" @click="handleEditSubmit">Save</button>
-              <button class="entry-form-cancel" data-test="skill-form-cancel" @click="cancelEdit">Cancel</button>
+              <button class="entry-form-submit" data-test="skill-form-submit" @click="handleEditSubmit">{{ t('skillsDrawer.save') }}</button>
+              <button class="entry-form-cancel" data-test="skill-form-cancel" @click="cancelEdit">{{ t('skillsDrawer.cancel') }}</button>
             </div>
           </div>
         </div>
@@ -126,14 +126,14 @@
           <span class="label">{{ entry.label || collapseHome(entry.path) }}</span>
           <span class="meta">{{ entry.skill_count ?? '' }}</span>
           <span class="se-actions" style="display: flex; gap: 2px;">
-            <button class="se-btn" title="Edit" :data-test="`edit-skill-${entry.id}`" @click.stop="startEdit(entry)">
+            <button class="se-btn" :title="t('skillsDrawer.edit')" :data-test="`edit-skill-${entry.id}`" @click.stop="startEdit(entry)">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
               </svg>
             </button>
-            <button class="se-btn danger" title="Remove" :data-test="`remove-skill-${entry.id}`" @click.stop="$emit('remove', entry.id)">
+            <button class="se-btn danger" :title="t('skillsDrawer.remove')" :data-test="`remove-skill-${entry.id}`" @click.stop="$emit('remove', entry.id)">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="3 6 5 6 21 6"/>
@@ -153,23 +153,23 @@
         >
           <span class="icn">⚠</span>
           <span class="label">{{ entry.label || collapseHome(entry.path) }}</span>
-          <button class="se-btn danger" title="Remove" :data-test="`remove-skill-${entry.id}`" @click.stop="$emit('remove', entry.id)">✕</button>
+          <button class="se-btn danger" :title="t('skillsDrawer.remove')" :data-test="`remove-skill-${entry.id}`" @click.stop="$emit('remove', entry.id)">✕</button>
         </div>
       </div>
 
       <!-- Add form -->
       <div v-if="showAddForm" class="entry-form" data-test="skill-entry-form">
-        <input v-model="addLabel" placeholder="Label (optional)" data-test="skill-label-input" />
-        <input v-model="addPath" placeholder="Absolute path…" data-test="skill-path-input" required />
+        <input v-model="addLabel" :placeholder="t('skillsDrawer.labelPlaceholder')" data-test="skill-label-input" />
+        <input v-model="addPath" :placeholder="t('skillsDrawer.pathPlaceholder')" data-test="skill-path-input" required />
         <div class="entry-form-row">
-          <button class="entry-form-submit" data-test="skill-form-submit" @click="handleAddSubmit">Add</button>
-          <button class="entry-form-cancel" data-test="skill-form-cancel" @click="showAddForm = false; addLabel = ''; addPath = ''">Cancel</button>
+          <button class="entry-form-submit" data-test="skill-form-submit" @click="handleAddSubmit">{{ t('skillsDrawer.add') }}</button>
+          <button class="entry-form-cancel" data-test="skill-form-cancel" @click="showAddForm = false; addLabel = ''; addPath = ''">{{ t('skillsDrawer.cancel') }}</button>
         </div>
       </div>
 
       <!-- Quick Actions -->
       <div class="drawer-section-label" style="margin-top: 8px;">
-        <span>Quick Actions</span>
+        <span>{{ t('skillsDrawer.quickActions') }}</span>
       </div>
 
       <button class="skill-row" @click="showAddForm = true">
@@ -179,7 +179,7 @@
             <path d="M12 5v14"/><path d="M5 12h14"/>
           </svg>
         </span>
-        <span class="label">New skill folder</span>
+        <span class="label">{{ t('skillsDrawer.newSkillFolder') }}</span>
       </button>
 
       <button class="skill-row" data-test="drawer-add-manual" @click="openSaveCurrentRoot">
@@ -189,12 +189,12 @@
             <path d="M6 3h12v18l-6-4-6 4V3z"/>
           </svg>
         </span>
-        <span class="label">Save current root</span>
+        <span class="label">{{ t('skillsDrawer.saveCurrentRoot') }}</span>
       </button>
 
       <!-- Starter Library (collapsible, at bottom) -->
       <button class="drawer-section-label starter-toggle" data-test="starter-toggle" style="margin-top: 8px;" @click="starterOpen = !starterOpen">
-        <span>Starter Library</span>
+        <span>{{ t('skillsDrawer.starterLibrary') }}</span>
         <svg class="starter-chevron" :class="{ open: starterOpen }" width="12" height="12" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M6 9l6 6 6-6"/>
@@ -228,7 +228,7 @@
                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M12 5v14"/><path d="M5 12h14"/>
                 </svg>
-                Add to workspace
+                {{ t('skillsDrawer.addToWorkspace') }}
               </div>
             </div>
           </button>
@@ -251,7 +251,10 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { collapseHome } from "../utils/path.js";
+
+const { t } = useI18n();
 
 const props = defineProps({
   open: { type: Boolean, required: true },

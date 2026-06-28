@@ -18,7 +18,7 @@
       class="add-icon-btn"
       :class="{ 'add-icon-btn--added': starter.already_added }"
       :disabled="starter.already_added || undefined"
-      :title="starter.already_added ? 'Already added' : 'Add'"
+      :title="starter.already_added ? t('skillStarterRow.alreadyAdded') : t('skillStarterRow.add')"
       @click="!starter.already_added && $emit('add', starter)"
     >{{ starter.already_added ? '✓' : '＋' }}</button>
 
@@ -26,6 +26,10 @@
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
+
 defineProps({ starter: { type: Object, required: true } });
 defineEmits(["add"]);
 </script>

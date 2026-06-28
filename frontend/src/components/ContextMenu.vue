@@ -3,31 +3,31 @@
     <template v-if="!showCreateFileInput && !showCreateFolderInput && !showRenameInput && node">
       <!-- Expand/Collapse buttons: folder nodes only -->
       <template v-if="node.type === 'folder'">
-        <button v-if="!isExpanded" @click="handleExpand">Expand</button>
-        <button @click="handleExpandAll">Expand All</button>
-        <button v-if="isExpanded" @click="handleCollapse">Collapse</button>
+        <button v-if="!isExpanded" @click="handleExpand">{{ t('contextMenu.expand') }}</button>
+        <button @click="handleExpandAll">{{ t('contextMenu.expandAll') }}</button>
+        <button v-if="isExpanded" @click="handleCollapse">{{ t('contextMenu.collapse') }}</button>
       </template>
-      <button v-if="node.type === 'folder'" data-test="set-as-root" @click="handleSetAsRoot">Set as Root</button>
+      <button v-if="node.type === 'folder'" data-test="set-as-root" @click="handleSetAsRoot">{{ t('contextMenu.setAsRoot') }}</button>
       <button v-if="node.type === 'file'" data-test="rename" @click="showRenameInput = true">
-        Rename
+        {{ t('contextMenu.rename') }}
       </button>
       <button v-if="node.type === 'folder'" data-test="rename" @click="showRenameInput = true">
-        Rename
+        {{ t('contextMenu.rename') }}
       </button>
-      <button data-test="copy-path" @click="handleCopyPath">Copy Path</button>
+      <button data-test="copy-path" @click="handleCopyPath">{{ t('contextMenu.copyPath') }}</button>
       <button v-if="node.type === 'folder'" data-test="new-file" @click="createFileValue = 'SKILL.md'; showCreateFileInput = true">
-        New File
+        {{ t('contextMenu.newFile') }}
       </button>
       <button v-if="node.type === 'folder'" data-test="new-folder" @click="createFolderValue = 'skills'; showCreateFolderInput = true">
-        New Folder
+        {{ t('contextMenu.newFolder') }}
       </button>
-      <button v-if="node.type === 'folder'" data-test="save-to-my-skills" @click="handleSaveToMySkills">Save to My Skills</button>
-      <button data-test="delete" @click="handleDelete">Delete</button>
+      <button v-if="node.type === 'folder'" data-test="save-to-my-skills" @click="handleSaveToMySkills">{{ t('contextMenu.saveToMySkills') }}</button>
+      <button data-test="delete" @click="handleDelete">{{ t('contextMenu.delete') }}</button>
     </template>
 
     <template v-if="showRenameInput && node">
       <div class="inline-form">
-        <span class="inline-form-label">Rename</span>
+        <span class="inline-form-label">{{ t('contextMenu.rename') }}</span>
         <input
           v-model="renameValue"
           class="inline-form-input"
@@ -36,44 +36,44 @@
           @keyup.escape="showRenameInput = false"
         />
         <div class="inline-form-actions">
-          <button class="inline-form-submit" data-test="rename-submit" @click="handleRename">Rename</button>
-          <button class="inline-form-cancel" @click="showRenameInput = false">Cancel</button>
+          <button class="inline-form-submit" data-test="rename-submit" @click="handleRename">{{ t('contextMenu.rename') }}</button>
+          <button class="inline-form-cancel" @click="showRenameInput = false">{{ t('contextMenu.cancel') }}</button>
         </div>
       </div>
     </template>
 
     <template v-if="showCreateFileInput && node">
       <div class="inline-form">
-        <span class="inline-form-label">New File</span>
+        <span class="inline-form-label">{{ t('contextMenu.newFile') }}</span>
         <input
           v-model="createFileValue"
           class="inline-form-input"
           data-test="create-file-input"
-          placeholder="file name"
+          :placeholder="t('contextMenu.fileNamePlaceholder')"
           @keyup.enter="handleCreateFile"
           @keyup.escape="showCreateFileInput = false"
         />
         <div class="inline-form-actions">
-          <button class="inline-form-submit" data-test="create-file-submit" @click="handleCreateFile">Create</button>
-          <button class="inline-form-cancel" @click="showCreateFileInput = false">Cancel</button>
+          <button class="inline-form-submit" data-test="create-file-submit" @click="handleCreateFile">{{ t('contextMenu.create') }}</button>
+          <button class="inline-form-cancel" @click="showCreateFileInput = false">{{ t('contextMenu.cancel') }}</button>
         </div>
       </div>
     </template>
 
     <template v-if="showCreateFolderInput && node">
       <div class="inline-form">
-        <span class="inline-form-label">New Folder</span>
+        <span class="inline-form-label">{{ t('contextMenu.newFolder') }}</span>
         <input
           v-model="createFolderValue"
           class="inline-form-input"
           data-test="create-folder-input"
-          placeholder="folder name"
+          :placeholder="t('contextMenu.folderNamePlaceholder')"
           @keyup.enter="handleCreateFolder"
           @keyup.escape="showCreateFolderInput = false"
         />
         <div class="inline-form-actions">
-          <button class="inline-form-submit" data-test="create-folder-submit" @click="handleCreateFolder">Create</button>
-          <button class="inline-form-cancel" @click="showCreateFolderInput = false">Cancel</button>
+          <button class="inline-form-submit" data-test="create-folder-submit" @click="handleCreateFolder">{{ t('contextMenu.create') }}</button>
+          <button class="inline-form-cancel" @click="showCreateFolderInput = false">{{ t('contextMenu.cancel') }}</button>
         </div>
       </div>
     </template>
@@ -82,6 +82,7 @@
 
 <script>
 import { ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
 
 export default {
   props: {
@@ -100,6 +101,7 @@ export default {
   },
   emits: ["close"],
   setup(props, { emit }) {
+    const { t } = useI18n()
     const showRenameInput = ref(false)
     const showCreateFileInput = ref(false)
     const showCreateFolderInput = ref(false)
@@ -224,7 +226,7 @@ export default {
     }
 
     const handleDelete = async () => {
-      if (window.confirm(`Delete ${props.node.name || props.node.path}?`)) {
+      if (window.confirm(t('contextMenu.deleteConfirm', { name: props.node.name || props.node.path }))) {
         try {
           await props.actions.deleteNode(props.node)
         } catch {
@@ -236,6 +238,7 @@ export default {
     }
 
     return {
+      t,
       showRenameInput,
       showCreateFileInput,
       showCreateFolderInput,

@@ -2,7 +2,7 @@
   <div v-if="open" class="modal-overlay" data-test="import-modal">
     <div class="modal-box">
       <div class="modal-header">
-        <span class="modal-title">Import Skills</span>
+        <span class="modal-title">{{ t('importModal.title') }}</span>
         <button class="modal-close" data-test="modal-close" @click="$emit('close')">✕</button>
       </div>
 
@@ -13,41 +13,41 @@
             :class="['toggle-btn', sourceType === 'repo' ? 'active' : '']"
             data-test="source-repo"
             @click="sourceType = 'repo'"
-          >GitHub / GitLab</button>
+          >{{ t('importModal.github') }}</button>
           <button
             :class="['toggle-btn', sourceType === 'local' ? 'active' : '']"
             data-test="source-local"
             @click="sourceType = 'local'"
-          >Local folder</button>
+          >{{ t('importModal.localFolder') }}</button>
         </div>
 
         <div v-if="sourceType === 'repo'" class="field-group">
-          <label class="field-label">Repository URL</label>
+          <label class="field-label">{{ t('importModal.repoUrl') }}</label>
           <input
             v-model="repoUrl"
             class="field-input"
             data-test="repo-url-input"
-            placeholder="https://github.com/org/repo"
+            :placeholder="t('importModal.repoUrlPlaceholder')"
           />
-          <label class="field-label">Subfolder (optional)</label>
+          <label class="field-label">{{ t('importModal.subfolder') }}</label>
           <input
             v-model="subfolder"
             class="field-input"
             data-test="subfolder-input"
-            placeholder="e.g. skills/"
+            :placeholder="t('importModal.subfolderPlaceholder')"
           />
         </div>
 
         <div v-else class="field-group">
-          <label class="field-label">Local path</label>
+          <label class="field-label">{{ t('importModal.localPath') }}</label>
           <div v-if="savedPaths.length > 0">
-            <label class="field-label">Saved locations</label>
+            <label class="field-label">{{ t('importModal.savedLocations') }}</label>
             <select
               class="field-input saved-paths-select"
               data-test="saved-paths-select"
               @change="localPath = $event.target.value"
             >
-              <option value="">— pick a saved location —</option>
+              <option value="">{{ t('importModal.savedLocationsPh') }}</option>
               <option v-for="p in savedPaths" :key="p.id" :value="p.path">{{ p.label }} — {{ p.path }}</option>
             </select>
           </div>
@@ -56,7 +56,7 @@
               v-model="localPath"
               class="field-input"
               data-test="local-path-input"
-              placeholder="/absolute/path/to/skills"
+              :placeholder="t('importModal.localPathPh')"
             />
             <button
               v-if="isElectron"
@@ -64,7 +64,7 @@
               data-test="browse-btn"
               type="button"
               @click="triggerPicker"
-            >Browse…</button>
+            >{{ t('importModal.browse') }}</button>
           </div>
           <input
             ref="pickerRef"
@@ -83,7 +83,7 @@
             data-test="scan-btn"
             :disabled="scanning || !canScan"
             @click="handleScan"
-          >{{ scanning ? 'Scanning…' : 'Scan' }}</button>
+          >{{ scanning ? t('importModal.scanning') : t('importModal.scan') }}</button>
         </div>
       </div>
 
@@ -93,29 +93,29 @@
         <div v-if="conflictQueue.length > 0" class="conflict-overlay" data-test="conflict-dialog">
           <div class="conflict-box">
             <p class="conflict-message">
-              <strong data-test="conflict-name">{{ conflictQueue[0] }}</strong> already exists at the destination.
+              <strong data-test="conflict-name">{{ conflictQueue[0] }}</strong> {{ t('importModal.alreadyExists') }}
             </p>
             <div class="conflict-actions">
-              <button class="btn-secondary" data-test="conflict-cancel-btn" @click="cancelConflict">Cancel</button>
-              <button class="btn-secondary" data-test="conflict-skip" @click="resolveConflict(conflictQueue[0], 'skip')">Skip</button>
-              <button class="btn-primary" data-test="conflict-overwrite-btn" @click="resolveConflict(conflictQueue[0], 'overwrite')">Overwrite</button>
+              <button class="btn-secondary" data-test="conflict-cancel-btn" @click="cancelConflict">{{ t('importModal.cancel') }}</button>
+              <button class="btn-secondary" data-test="conflict-skip" @click="resolveConflict(conflictQueue[0], 'skip')">{{ t('importModal.skip') }}</button>
+              <button class="btn-primary" data-test="conflict-overwrite-btn" @click="resolveConflict(conflictQueue[0], 'overwrite')">{{ t('importModal.overwrite') }}</button>
             </div>
           </div>
         </div>
 
-        <div class="source-badge" data-test="source-badge">{{ sourceLabel }} — {{ skillList.length }} skills found</div>
+        <div class="source-badge" data-test="source-badge">{{ t('importModal.skillsFound', { label: sourceLabel, count: skillList.length }) }}</div>
 
         <div class="list-controls">
-          <a href="#" data-test="select-all-btn" @click.prevent="selectAll">Select all</a>
+          <a href="#" data-test="select-all-btn" @click.prevent="selectAll">{{ t('importModal.selectAll') }}</a>
           <span class="list-sep">·</span>
-          <a href="#" data-test="select-none" @click.prevent="selectNone">Unselect all</a>
+          <a href="#" data-test="select-none" @click.prevent="selectNone">{{ t('importModal.unselectAll') }}</a>
         </div>
 
         <input
           v-model="searchQuery"
           class="field-input search-input"
           data-test="skill-search"
-          placeholder="Search skills…"
+          :placeholder="t('importModal.searchPh')"
           type="search"
         />
 
@@ -136,14 +136,14 @@
 
         <p v-if="importError" class="error-text" data-test="error-banner">
           {{ importError }}
-          <button v-if="showRetry" class="btn-link" data-test="retry-btn" @click="goBack">Try Again</button>
+          <button v-if="showRetry" class="btn-link" data-test="retry-btn" @click="goBack">{{ t('importModal.tryAgain') }}</button>
         </p>
 
         <div class="modal-footer">
-          <span class="selection-count" data-test="selection-count">{{ selected.size }} of {{ skillList.length }} selected</span>
-          <button class="btn-secondary" data-test="back-btn" @click="goBack">Back</button>
+          <span class="selection-count" data-test="selection-count">{{ t('importModal.selectionCount', { selected: selected.size, total: skillList.length }) }}</span>
+          <button class="btn-secondary" data-test="back-btn" @click="goBack">{{ t('importModal.back') }}</button>
           <button class="btn-primary" data-test="import-btn" :disabled="importing || selected.size === 0" @click="handleImport">
-            {{ importing ? 'Importing…' : `Import ${selected.size} skill${selected.size !== 1 ? 's' : ''}` }}
+            {{ importBtnLabel }}
           </button>
         </div>
       </div>
@@ -153,7 +153,10 @@
 
 <script setup>
 import { ref, computed, inject, onMounted, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { scanSkills, importSkills } from "../api/skills_import.js";
+
+const { t } = useI18n();
 
 const props = defineProps({ open: { type: Boolean, default: false } });
 const emit = defineEmits(["close", "imported"]);
@@ -174,6 +177,12 @@ const showRetry = ref(false);
 const conflictQueue = ref([]);
 const conflictResolutions = ref({});
 const searchQuery = ref("");
+
+const importBtnLabel = computed(() => {
+  if (importing.value) return t('importModal.importing');
+  const count = selected.value.size;
+  return t(count !== 1 ? 'importModal.importBtnPlural' : 'importModal.importBtnSingular', { count });
+});
 
 const filteredSkills = computed(() => {
   const q = searchQuery.value.trim().toLowerCase();
@@ -256,7 +265,7 @@ async function handleScan() {
   try {
     const data = await scanSkills(buildSourcePayload());
     if (data.skills.length === 0) {
-      scanError.value = "No skills found in this source.";
+      scanError.value = t('importModal.noSkillsFound');
       return;
     }
     skillList.value = data.skills;
@@ -267,7 +276,7 @@ async function handleScan() {
     importError.value = null;
     step.value = 2;
   } catch (err) {
-    scanError.value = err.detail || "Failed to scan source";
+    scanError.value = err.detail || t('importModal.noSkillsFound');
   } finally {
     scanning.value = false;
   }
@@ -308,10 +317,10 @@ async function handleImport() {
     if (err.conflicts) {
       conflictQueue.value = err.conflicts;
     } else if (err.status === 422) {
-      importError.value = "One or more selected skills could not be found — please re-scan and try again";
+      importError.value = t('importModal.rescanNeeded');
       showRetry.value = false;
     } else {
-      importError.value = "Import failed — go back and try again. Some skills may have been partially copied.";
+      importError.value = t('importModal.importFailed');
       showRetry.value = true;
     }
   } finally {

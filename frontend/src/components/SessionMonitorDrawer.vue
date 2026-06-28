@@ -2,11 +2,11 @@
   <aside class="drawer-aside right" data-test="session-monitor-drawer">
     <!-- Header -->
     <div class="drawer-hd">
-      <h3>Recording Sessions</h3>
+      <h3>{{ t('sessionMonitor.title') }}</h3>
       <div style="display: flex; gap: 4px">
         <button
           class="drawer-hd-icon"
-          title="Close"
+          :title="t('sessionMonitor.close')"
           data-test="drawer-close"
           @click="$emit('close')"
         >
@@ -30,8 +30,8 @@
 
     <!-- History -->
     <div class="sess-history-hd">
-      <span>History</span>
-      <span class="count">{{ visibleSessions.length }} sessions</span>
+      <span>{{ t('sessionMonitor.history') }}</span>
+      <span class="count">{{ t('sessionMonitor.sessionCount', { count: visibleSessions.length }) }}</span>
     </div>
 
     <div class="sess-history-list">
@@ -40,7 +40,7 @@
         class="sess-empty"
         data-test="usage-empty"
       >
-        No sessions recorded yet.
+        {{ t('sessionMonitor.noSessions') }}
       </div>
 
       <div
@@ -104,7 +104,7 @@
               v-if="!(sessionEventsCache[session.id] || []).length"
               class="usage-skill-empty"
             >
-              No skills recorded.
+              {{ t('sessionMonitor.noSkillsRecorded') }}
             </li>
           </ul>
         </div>
@@ -113,7 +113,7 @@
           <button
             class="sess-action-btn"
             :disabled="isRecording || isReplaying"
-            title="Replay"
+            :title="t('sessionMonitor.replay')"
             data-test="replay-btn"
             @click="$emit('replay-session', session.id)"
           >
@@ -130,9 +130,7 @@
           <button
             class="sess-action-btn"
             :aria-expanded="expandedSessions.has(session.id)"
-            :title="
-              expandedSessions.has(session.id) ? 'Collapse' : 'Expand skills'
-            "
+            :title="expandedSessions.has(session.id) ? t('sessionMonitor.collapseSkills') : t('sessionMonitor.expandSkills')"
             data-test="expand-btn"
             @click="toggleSessionEvents(session.id)"
           >
@@ -156,7 +154,7 @@
           </button>
           <button
             class="sess-action-btn danger"
-            title="Delete session"
+            :title="t('sessionMonitor.deleteSession')"
             data-test="delete-session-btn"
             @click="confirmDelete(session.id)"
           >
@@ -184,7 +182,10 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { getSessionEvents } from "../api/client.js";
+
+const { t } = useI18n();
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -205,7 +206,7 @@ const emit = defineEmits([
 ]);
 
 function confirmDelete(sessionId) {
-  if (window.confirm("Delete this session? This cannot be undone.")) {
+  if (window.confirm(t('sessionMonitor.deleteConfirm'))) {
     emit("delete-session", sessionId);
   }
 }

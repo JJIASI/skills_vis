@@ -55,7 +55,7 @@
           <button
             type="button"
             data-test="edit-mode-toggle"
-            title="Edit"
+            :title="t('editor.edit')"
             class="icon-btn"
             @click="toggleEditMode"
           >
@@ -71,14 +71,14 @@
 
         <!-- Save/Cancel: non-markdown text files always; markdown files only in edit mode -->
         <template v-if="currentFile && currentFile.kind === 'text' && (!isMarkdown || isEditMode)">
-          <button type="button" data-test="save" title="Save" class="icon-btn" @click="handleSave">
+          <button type="button" data-test="save" :title="t('editor.save')" class="icon-btn" @click="handleSave">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
               <polyline points="17 21 17 13 7 13 7 21"/>
               <polyline points="7 3 7 8 15 8"/>
             </svg>
           </button>
-          <button type="button" data-test="cancel" title="Cancel" class="icon-btn" @click="handleCancel">
+          <button type="button" data-test="cancel" :title="t('editor.cancel')" class="icon-btn" @click="handleCancel">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <line x1="18" y1="6" x2="6" y2="18"/>
               <line x1="6" y1="6" x2="18" y2="18"/>
@@ -86,7 +86,7 @@
           </button>
         </template>
         <template v-if="selectedNode.type === 'file'">
-          <button type="button" data-test="delete-file" title="Delete" class="icon-btn icon-btn--danger" @click="handleDelete">
+          <button type="button" data-test="delete-file" :title="t('editor.delete')" class="icon-btn icon-btn--danger" @click="handleDelete">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="3 6 5 6 21 6"/>
               <path d="M19 6l-1 14H6L5 6"/>
@@ -96,7 +96,7 @@
           </button>
         </template>
         <template v-if="selectedNode.type === 'folder'">
-          <button type="button" data-test="delete-folder" title="Delete" class="icon-btn icon-btn--danger" @click="handleDelete">
+          <button type="button" data-test="delete-folder" :title="t('editor.delete')" class="icon-btn icon-btn--danger" @click="handleDelete">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="3 6 5 6 21 6"/>
               <path d="M19 6l-1 14H6L5 6"/>
@@ -113,10 +113,10 @@
 
     <div class="editor-content">
       <template v-if="!currentFile">
-        <div>Folder selected</div>
+        <div>{{ t('editor.folderSelected') }}</div>
       </template>
       <template v-else-if="currentFile.kind === 'binary'">
-        <div>Cannot preview binary file</div>
+        <div>{{ t('editor.binaryPreview') }}</div>
       </template>
       <template v-else-if="isMarkdown">
         <div class="markdown-view-container">
@@ -173,31 +173,31 @@
             <path d="M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4L12 3z"/>
           </svg>
         </div>
-        <h2>Inspect a skill</h2>
-        <p>Click any node in the graph to preview its <code class="mono">SKILL.md</code> here. Right-click for rename, delete and copy path.</p>
+        <h2>{{ t('editor.inspectTitle') }}</h2>
+        <p>{{ t('editor.inspectDesc') }}</p>
       </div>
 
       <div class="hint-list">
         <div class="hint">
-          <span class="k mono">click</span>
-          <span class="t"><b>Open</b> a file or expand a folder.</span>
+          <span class="k mono">{{ t('editor.hintClick') }}</span>
+          <span class="t">{{ t('editor.hintOpen') }}</span>
         </div>
         <div class="hint">
           <span class="k mono">{{ modKey }} K</span>
-          <span class="t"><b>Search</b> across every skill in the workspace.</span>
+          <span class="t">{{ t('editor.hintSearch') }}</span>
         </div>
         <div class="hint">
           <span class="k mono">{{ modKey }}⇧R</span>
-          <span class="t"><b>Record</b> a session to highlight skills as an agent invokes them.</span>
+          <span class="t">{{ t('editor.hintRecord') }}</span>
         </div>
         <div class="hint">
-          <span class="k mono">right‑click</span>
-          <span class="t"><b>Manage</b> — rename, delete, save to a workspace, copy path.</span>
+          <span class="k mono">{{ t('editor.hintRightClick') }}</span>
+          <span class="t">{{ t('editor.hintManage') }}</span>
         </div>
       </div>
 
       <div v-if="recentFiles && recentFiles.length">
-        <div class="reader-recent-hd">Recently opened</div>
+        <div class="reader-recent-hd">{{ t('editor.recentlyOpened') }}</div>
         <div
           v-for="(f, i) in recentFiles"
           :key="i"
@@ -225,6 +225,7 @@
 
 <script>
 import { ref, computed, watch, nextTick } from "vue"
+import { useI18n } from "vue-i18n"
 import { MdEditor, MdPreview, MdCatalog, config } from "md-editor-v3"
 import "md-editor-v3/lib/style.css"
 import { classifyFile } from "../utils/fileKind"
@@ -251,6 +252,7 @@ export default {
     },
   },
   setup(props) {
+    const { t } = useI18n()
     const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad|iPod/.test(navigator.platform);
     const modKey = isMac ? "⌘" : "Ctrl";
 
@@ -324,7 +326,7 @@ export default {
     }
 
     const handleDelete = async () => {
-      if (window.confirm(`Delete ${props.selectedNode.name}?`)) {
+      if (window.confirm(t('editor.deleteConfirm', { name: props.selectedNode.name }))) {
         if (props.actions.deleteNode) {
           await props.actions.deleteNode(props.selectedNode)
         }
@@ -358,7 +360,7 @@ export default {
         isEditingName.value = false
         renameError.value = null
       } catch {
-        renameError.value = "Rename failed — invalid name or conflict"
+        renameError.value = t('editor.renameFailed')
       } finally {
         isCommittingName.value = false
       }
@@ -384,6 +386,7 @@ export default {
     })
 
     return {
+      t,
       editorContent,
       isEditingName,
       editingName,

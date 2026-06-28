@@ -69,7 +69,7 @@
       <!-- Graph panel -->
       <div class="graph-panel" data-test="graph-panel" :class="{ 'panel--full': fullPanel === 'graph' }" :style="graphPanelStyle">
         <template v-if="fullPanel !== 'editor'">
-          <PanelHeader label="Graph" :is-expanded="fullPanel === 'graph'" data-test="graph-panel-header" @toggle="toggleFullPanel('graph')" />
+          <PanelHeader :label="t('app.graph')" :is-expanded="fullPanel === 'graph'" data-test="graph-panel-header" @toggle="toggleFullPanel('graph')" />
           <div v-if="replayRootMismatch" class="replay-root-warning" data-test="replay-root-warning">⚠ This session was recorded with root: {{ replayRootMismatch }}</div>
           <GraphPanel
             ref="graphPanelRef"
@@ -93,8 +93,8 @@
             @prev-search-match="handlePrevSearchMatch"
           />
         </template>
-        <button v-else class="panel-strip" data-test="graph-strip" aria-label="Restore split view" @click="toggleFullPanel('editor')">
-          <span class="strip-label">Graph</span>
+        <button v-else class="panel-strip" data-test="graph-strip" :aria-label="t('app.restoreSplitView')" @click="toggleFullPanel('editor')">
+          <span class="strip-label">{{ t('app.graph') }}</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <polyline points="15 18 9 12 15 6"/>
@@ -108,7 +108,7 @@
         data-test="resize-handle"
         role="separator"
         aria-orientation="vertical"
-        aria-label="Resize panels"
+        :aria-label="t('app.resizePanels')"
         tabindex="0"
         :aria-valuenow="ariaValueNow"
         :aria-valuemin="ariaValueMin"
@@ -122,7 +122,7 @@
       <!-- Editor panel -->
       <div class="editor-panel" data-test="editor-panel" :class="{ 'panel--full': fullPanel === 'editor' }" :style="editorPanelStyle">
         <template v-if="fullPanel !== 'graph'">
-          <PanelHeader label="File Viewer" :is-expanded="fullPanel === 'editor'" data-test="editor-panel-header" @toggle="toggleFullPanel('editor')" />
+          <PanelHeader :label="t('app.fileViewer')" :is-expanded="fullPanel === 'editor'" data-test="editor-panel-header" @toggle="toggleFullPanel('editor')" />
           <EditorPanel
             :current-file="currentFile"
             :selected-node="selectedNode"
@@ -130,8 +130,8 @@
             :recent-files="recentFiles"
           />
         </template>
-        <button v-else class="panel-strip" data-test="editor-strip" aria-label="Restore split view" @click="toggleFullPanel('graph')">
-          <span class="strip-label">File Viewer</span>
+        <button v-else class="panel-strip" data-test="editor-strip" :aria-label="t('app.restoreSplitView')" @click="toggleFullPanel('graph')">
+          <span class="strip-label">{{ t('app.fileViewer') }}</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <polyline points="9 18 15 12 9 6"/>
@@ -159,6 +159,7 @@
 
 <script setup>
 import { ref, inject, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
+import { useI18n } from "vue-i18n";
 import Toolbar from "./components/Toolbar.vue";
 import PanelHeader from "./components/PanelHeader.vue";
 import GraphPanel from "./components/GraphPanel.vue";
@@ -176,6 +177,8 @@ import { collectSearchExpandPaths, collectSearchMatches, nextIndex, prevIndex } 
 import * as clientApi from "./api/client.js";
 import { ACTIVE_NODE_FADE_MS } from "./components/graph/canvasRenderer.js";
 import { collapseHome, setHome } from "./utils/path.js";
+
+const { t } = useI18n();
 
 const props = defineProps({
   initialTree: Object,

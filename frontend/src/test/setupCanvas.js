@@ -1,3 +1,18 @@
+import { config } from "@vue/test-utils";
+import { createI18n } from "vue-i18n";
+import en from "../locales/en.js";
+import zhTW from "../locales/zh-TW.js";
+
+const i18n = createI18n({
+  legacy: false,
+  locale: "en",
+  fallbackLocale: "en",
+  messages: { en, "zh-TW": zhTW },
+});
+
+config.global.plugins = config.global.plugins || [];
+config.global.plugins.push(i18n);
+
 Object.defineProperty(window, "devicePixelRatio", {
   value: 2,
   configurable: true,
