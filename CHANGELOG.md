@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-07-01
+
+### Added
+
+- **i18n**: full English and Traditional Chinese (zh-TW) support across all UI components, with a Toolbar toggle button; language preference is persisted in localStorage
+- **i18n**: initial locale is automatically detected from the browser's language setting, falling back to English when no preference is saved
+- **Server**: `--no-browser` flag suppresses the automatic browser launch on startup
+
 ## [0.1.5] - 2026-06-16
 
 ### Added
