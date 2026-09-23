@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-09-24
+
+### Added
+
+- **MDC preview**: `.mdc` files (Cursor rules) now open as rich markdown previews; frontmatter fields `description`, `globs`, and `alwaysApply` are displayed in the file header
+
+### Fixed
+
+- **Responsive layout**: removed the `min-width: 1280px` hard floor on the app shell so the layout adapts when the browser window is narrowed; toolbar buttons that previously went off-screen are now reachable by scrolling the toolbar
+
 ## [0.2.1] - 2026-07-01
 
 ### Added

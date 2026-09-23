@@ -32,21 +32,36 @@
         </div>
         <div class="header-path" data-test="editor-header-path">{{ collapseHome(selectedNode.path) }}</div>
         <div v-if="skillHeader" class="skill-header" data-test="skill-header">
-          <div class="skill-header-name" data-test="skill-header-name">{{ skillHeader.name }}</div>
-          <div class="skill-header-description" data-test="skill-header-description">{{ skillHeader.description }}</div>
-          <div v-if="skillHeader.version || skillHeader.author || skillHeader.license" class="skill-header-meta">
-            <span v-if="skillHeader.version" class="skill-header-version" data-test="skill-header-version">v{{ skillHeader.version }}</span>
-            <span v-if="skillHeader.author" class="skill-header-author" data-test="skill-header-author">{{ skillHeader.author }}</span>
-            <span v-if="skillHeader.license" class="skill-header-license" data-test="skill-header-license">{{ skillHeader.license }}</span>
-          </div>
-          <div v-if="skillHeader.tags && skillHeader.tags.length" class="skill-header-tags">
-            <span
-              v-for="tag in skillHeader.tags"
-              :key="tag"
-              class="skill-header-tag"
-              data-test="skill-header-tag"
-            >{{ tag }}</span>
-          </div>
+          <div v-if="skillHeader.name" class="skill-header-name" data-test="skill-header-name">{{ skillHeader.name }}</div>
+          <div v-if="skillHeader.description" class="skill-header-description" data-test="skill-header-description">{{ skillHeader.description }}</div>
+          <!-- Cursor MDC fields -->
+          <template v-if="isMdc">
+            <div v-if="skillHeader.globs" class="skill-header-meta mdc-globs" data-test="skill-header-globs">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <span class="mono">{{ Array.isArray(skillHeader.globs) ? skillHeader.globs.join(', ') : skillHeader.globs }}</span>
+            </div>
+            <div v-if="skillHeader.alwaysApply !== undefined" class="skill-header-meta" data-test="skill-header-always-apply">
+              <span :class="['mdc-badge', skillHeader.alwaysApply === 'true' ? 'mdc-badge--on' : 'mdc-badge--off']">
+                {{ skillHeader.alwaysApply === 'true' ? 'Always apply' : 'Manual' }}
+              </span>
+            </div>
+          </template>
+          <!-- Skill .md fields -->
+          <template v-else>
+            <div v-if="skillHeader.version || skillHeader.author || skillHeader.license" class="skill-header-meta">
+              <span v-if="skillHeader.version" class="skill-header-version" data-test="skill-header-version">v{{ skillHeader.version }}</span>
+              <span v-if="skillHeader.author" class="skill-header-author" data-test="skill-header-author">{{ skillHeader.author }}</span>
+              <span v-if="skillHeader.license" class="skill-header-license" data-test="skill-header-license">{{ skillHeader.license }}</span>
+            </div>
+            <div v-if="skillHeader.tags && skillHeader.tags.length" class="skill-header-tags">
+              <span
+                v-for="tag in skillHeader.tags"
+                :key="tag"
+                class="skill-header-tag"
+                data-test="skill-header-tag"
+              >{{ tag }}</span>
+            </div>
+          </template>
         </div>
       </div>
       <div class="header-actions">
@@ -284,8 +299,11 @@ export default {
 
     const isMarkdown = computed(() => {
       if (!props.currentFile) return false
-      return props.currentFile.path?.endsWith(".md") && props.currentFile.kind === "text"
+      const path = props.currentFile.path
+      return (path?.endsWith(".md") || path?.endsWith(".mdc")) && props.currentFile.kind === "text"
     })
+
+    const isMdc = computed(() => !!props.currentFile?.path?.endsWith(".mdc"))
 
     const editorLanguage = computed(() => {
       if (!props.currentFile || props.currentFile.kind !== "text") return "text"
@@ -394,6 +412,7 @@ export default {
       nameInputRef,
       isCommittingName,
       isMarkdown,
+      isMdc,
       editorLanguage,
       isModified,
       skillHeader,
